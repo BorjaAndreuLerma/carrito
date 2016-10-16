@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<!--
+To change this license header, choose License Headers in Project Properties.
+To change this template file, choose Tools | Templates
+and open the template in the editor.
+-->
+<html>
+    <head>
+        <title>Carrtio_compra</title>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <link type="text/css" rel="stylesheet" href="newcss.css"/>
+    </head>
+    <body>
+        <script>
+            function alCarro(id) {
+                var div = document.getElementById(id);
+                var texto = div.getElementsByTagName("p")[0].firstChild.nodeValue;
+                var precio = parseInt(texto.toString().split(" ")[1]);
+                var src = div.getElementsByTagName("img")[0].getAttribute("src");
+
+                var imagen = document.createElement("img");
+                imagen.setAttribute("src", src);
+                imagen.setAttribute("width", 350);
+                imagen.setAttribute("height", 350);
+                var textoPrecio = document.createTextNode(texto);
+                var textoUnidad = document.createTextNode("Unidades: 1");
+                var unidades = 1;
+                var precioTotal = precio * unidades;
+                var nodoPreciototal = document.createTextNode("PrecioTotal:" + precioTotal);
+                var botonrestar = document.createElement("button");
+                var textoRestar = document.createTextNode("Restar");
+                botonrestar.appendChild(textoRestar);
+                botonrestar.setAttribute("onclick", "restarUno(this)");
+                var botonborrartodo = document.createElement("button");
+                var textoBorrarTodo = document.createTextNode("Borrar");
+                botonborrartodo.appendChild(textoBorrarTodo);
+                botonborrartodo.setAttribute("onclick", "borrarProducto(this)");
+
+                var existe = document.getElementById("p" + div.id);
+                var br = document.createElement("br");
+                var br2 = document.createElement("br");
+                var br3 = document.createElement("br");
+                var br4 = document.createElement("br");
+
+                if (existe !== null) {
+                    var botonrestar = existe.lastChild.previousSibling;
+                    var unbr = botonrestar.previousSibling;
+                    var nodoPrecioTotalA = unbr.previousSibling;
+                    var otrobr = nodoPrecioTotalA.previousSibling;
+                    var unidadesViejas = otrobr.previousSibling;
+                    unidades = parseInt(unidadesViejas.nodeValue.split(" ")[1]);
+                    unidades++;
+                    precioTotal = precio * unidades;
+                    var unidadesNuevas = document.createTextNode("Unidades: " + unidades);
+                    nodoPreciototal = document.createTextNode("PrecioTotal: " + precioTotal);
+                    existe.replaceChild(unidadesNuevas, unidadesViejas);
+                    existe.replaceChild(nodoPreciototal, nodoPrecioTotalA);
+                } else {
+                    var divProductoNuevo = document.createElement("div");
+                    divProductoNuevo.setAttribute("class", "productosCarrito");
+                    divProductoNuevo.setAttribute("id", "p" + div.id);
+                    divProductoNuevo.appendChild(imagen);
+                    divProductoNuevo.appendChild(br);
+                    divProductoNuevo.appendChild(textoPrecio);
+                    divProductoNuevo.appendChild(br2);
+                    divProductoNuevo.appendChild(textoUnidad);
+                    divProductoNuevo.appendChild(br3);
+                    divProductoNuevo.appendChild(nodoPreciototal);
+                    divProductoNuevo.appendChild(br4);
+                    divProductoNuevo.appendChild(botonrestar);
+                    divProductoNuevo.appendChild(botonborrartodo);
+                    document.getElementById("divcompra").appendChild(divProductoNuevo);
+                }
+            }
+
+            function borrarProducto(nodo) {
+                var divPadre = nodo.parentNode;
+                divPadre.parentNode.removeChild(divPadre);
+
+            }
+            function restarUno(nodo) {
+                var botonborrar = nodo.parentNode.lastChild.previousSibling;
+                var unbr = botonborrar.previousSibling;
+                var textoPrecioTotalA = unbr.previousSibling;
+                var PrecioTotalA = parseInt(textoPrecioTotalA.nodeValue.split(" ")[1]);
+                var otrobr = textoPrecioTotalA.previousSibling;
+                var textoUnidadesViejas = otrobr.previousSibling;
+                var unidadesViejas = parseInt(textoUnidadesViejas.nodeValue.split(" ")[1]);
+                var otrobrmas = textoUnidadesViejas.previousSibling;
+                var textoPrecio = otrobrmas.previousSibling;
+                var precio = parseInt(textoPrecio.nodeValue.split(" ")[1]);
+                if (unidadesViejas > 1) {
+                    unidadesViejas--;
+                    var nuevoTotal = document.createTextNode("PrecioTotal: "+ (PrecioTotalA - precio));
+                    nodo.parentNode.replaceChild(nuevoTotal, textoPrecioTotalA);
+                    var unidadesNuevas = document.createTextNode("Unidades: " + unidadesViejas);
+                    nodo.parentNode.replaceChild(unidadesNuevas, textoUnidadesViejas);
+                } else {
+                    borrarProducto(nodo);
+                }
+            }
+        </script>
+        <div class="primerdiv">
+            <div id="1" class='divs' onclick="alCarro(1)">
+                <img src='imagenes/portatil1.jpg' alt='portatil1' width="350" height="350"/>
+                <p>Precio: 500€</p>
+            </div>
+            <div id="2" class='divs' onclick="alCarro(2)">
+                <img src='imagenes/portatil2.jpg' alt='portatil2' width="350" height="350"/>
+                <p>Precio: 350€</p>
+            </div>
+            <div id="3" class='divs' onclick="alCarro(3)">
+                <img src='imagenes/portatil3.jpg' alt='portatil3' width="350" height="350"/>
+                <p>Precio: 700€</p>
+            </div>
+        </div>
+        <div id="divcompra" class="primerdiv">
+
+        </div>
+    </body>
+</html>
